@@ -2,8 +2,8 @@
 in vec3 vertexColor;
 out vec4 FragColor;
 
-uniform vec4 frogColor;
+uniform vec4 ownColor;
 
 void main() {
-  FragColor = frogColor;
+  FragColor = ownColor;
 }
