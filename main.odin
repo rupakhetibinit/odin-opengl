@@ -44,26 +44,8 @@ main :: proc() {
 	glfw.SetFramebufferSizeCallback(windowHandle, frameBufferSizeCallback)
 	glfw.SetWindowSizeCallback(windowHandle, frameBufferSizeCallback)
 
-
-	vertexShaderId, ok := gl.compile_shader_from_source(vertexShader, gl.Shader_Type.VERTEX_SHADER)
-
-	if (!ok) {
-		fmt.println("Something wrong with vertex shader, fix it")
-	}
-
-
-	fragmentShaderId, ook := gl.compile_shader_from_source(
-		fragmentShader,
-		gl.Shader_Type.FRAGMENT_SHADER,
-	)
-	if (!ook) {
-		fmt.println("Something wrong with vertex shader, fix it")
-	}
-
-	shaderProgram, success := gl.create_and_link_program([]u32{fragmentShaderId, vertexShaderId})
-	if !success {
-		fmt.println("Uh oh, your shader program sucks, fix it")
-	}
+	shader := loadShaderFromFile("shaders/triangle_shader.vs", "shaders/triangle_shader.fs")
+	shaderProgram := shader.ID
 
 	vertices := [?]f32 {
 		// Positions    // Colors
@@ -104,7 +86,6 @@ main :: proc() {
 		1.0,
 		0.0, // Bottom left (Yellow)
 	}
-
 
 	//Vertex array objects
 	VAO: u32
@@ -150,27 +131,3 @@ main :: proc() {
 frameBufferSizeCallback :: proc "c" (window: glfw.WindowHandle, width, height: i32) {
 	gl.Viewport(0, 0, width, height)
 }
-
-fragmentShader := `
-#version 330 core
-in vec3 vertexColor;
-out vec4 FragColor;
-
-uniform vec4 frogColor;
-
-void main() {
-  //FragColor = vec4(vertexColor, 1.0);
-	FragColor = frogColor;
-}
-`
-
-vertexShader := `#version 330 core
-layout(location = 0) in vec3 aPos;
-layout(location = 1) in vec3 aColor;
-
-out vec3 vertexColor;
-
-void main() {
-	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-	vertexColor = aColor;
-}`
